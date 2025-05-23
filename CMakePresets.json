@@ -1,0 +1,44 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name":      "Waveshare_rp2040_lcd_1.28",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/waveshare_rp2040_lcd_1.28",
+      "cacheVariables": {
+        "PICO_BOARD":                   "waveshare_rp2040_lcd_1.28"
+      },
+      "environment": {
+        "PICO_SDK_PATH": "../../../pico-sdk"
+      }
+    },
+    {
+      "name":      "Waveshare_rp2040_pizero",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/waveshare_rp2040_pizero",
+      "cacheVariables": {
+        "PICO_BOARD":                   "waveshare_rp2040_pizero"
+      },
+      "environment": {
+        "PICO_SDK_PATH": "../../../pico-sdk"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name":             "Waveshare_rp2040_lcd_1.28",
+      "configurePreset":  "Waveshare_rp2040_lcd_1.28",
+      "hidden":           true
+    },
+    {
+      "name":             "Waveshare_rp2040_pizero",
+      "configurePreset":  "Waveshare_rp2040_pizero",
+      "hidden":           true
+    }
+  ]
+}
