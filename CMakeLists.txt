@@ -1,24 +1,15 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.13)
 
-# Fetch/build picotool
-set(PICOTOOL_FETCH_FROM_GIT_PATH "${CMAKE_SOURCE_DIR}/third_party/picotool")
+# Provide an entry-point function
+function(pico_template_start proj_name)
+    # import SDK
+    include(${CMAKE_CURRENT_LIST_DIR}/template.cmake)
+    # project name, languages
+    project(${proj_name} C CXX ASM)
+    pico_sdk_init()
+endfunction()
 
-# Include the SDK import
-include(pico_sdk_import.cmake)
-
-# Project name
-project(pico-cmake-project)
-
-# Initialize the Raspberry Pi Pico SDK
-pico_sdk_init()
-
-# Add executables
-add_executable(main
-        main.c
-)
-
-# Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(main pico_stdlib)
-
-# Create map/bin/hex/uf2 file in addition to ELF.
-pico_add_extra_outputs(main)
+function(pico_template_end)
+    # default executable wiring
+    pico_add_extra_outputs(${PROJECT_NAME})
+endfunction()

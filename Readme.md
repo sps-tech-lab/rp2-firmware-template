@@ -3,17 +3,21 @@
 
 ---
 
-### Add to CLion profile
+### What you need to do
+Clone the Pico SDK (if you haven’t already):
+```
+git clone https://github.com/raspberrypi/pico-sdk.git
+```
+Ensure your presets (or your shell) set:
+```
+PICO_SDK_PATH=../../pico-sdk   # relative to your build folder
+```
 
-Cmake options
+Verify that file exists:
 ```
--DPICOTOOL_FETCH_FROM_GIT_PATH=../../picotool
+ls ../../pico-sdk/external/pico_sdk_import.cmake
 ```
-
-Enviroment
-```
-PICO_SDK_PATH=../../pico-sdk
-```
+template.cmake will then successfully include it, bringing in all of the SDK machinery.
 
 ---
 
