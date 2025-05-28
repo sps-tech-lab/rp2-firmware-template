@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 
-# Fetch/build picotool
-set(PICOTOOL_FETCH_FROM_GIT_PATH "${CMAKE_SOURCE_DIR}/third_party/picotool")
+# Check [pico-sdk] and [picotool]
+include(cmake/bringup_helper.cmake)
 
 # Include the SDK import
 include(pico_sdk_import.cmake)
@@ -14,7 +14,7 @@ pico_sdk_init()
 
 # Add executables
 add_executable(main
-        main.c
+        app/main.c
 )
 
 # Add pico_stdlib library which aggregates commonly used features

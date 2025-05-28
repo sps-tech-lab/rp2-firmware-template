@@ -1,6 +1,15 @@
 
 # PICO CMAKE PROJECT
 
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/sps-tech-lab/pico-cmake-project?label=version)
+![License](https://img.shields.io/github/license/sps-tech-lab/pico-cmake-project)
+
+---
+
+## About
+Here's a CMake project template for RP2040/3050 microcontrollers, 
+designed to give new projects a quick and easy start.
+
 ---
 
 ## Getting Started
@@ -24,6 +33,14 @@ For command line it would be:
 ```
 cmake --preset <YourBoardPreset>
 cmake --build --preset <YourBoardPreset>
+```
+
+After it, edit `CMakeLists.txt` in `<root_folder>`:
+```cmake
+# rename
+project(pico-cmake-project)
+# to
+project(your_project_name)
 ```
 
 ---
