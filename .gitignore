@@ -1,0 +1,16 @@
+# Common build folder
+build/
+
+# User-specific stuff:
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/misc.xml
+.idea/jsLibraryMappings.xml
+.idea/*.iml
+
+# Fetchable third party content
+third_party/
+
+CMakePresets.json
