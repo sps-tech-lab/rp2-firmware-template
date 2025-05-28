@@ -26,6 +26,14 @@ cmake --preset <YourBoardPreset>
 cmake --build --preset <YourBoardPreset>
 ```
 
+After it, edit `CMakeLists.txt` in `<root_folder>`:
+```cmake
+# rename
+project(pico-cmake-project)
+# to
+project(your_project_name)
+```
+
 ---
 
 ## Dependencies
