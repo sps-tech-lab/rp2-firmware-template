@@ -11,3 +11,5 @@ build/
 
 # Fetchable third party content
 third_party/
+
+CMakePresets.json
