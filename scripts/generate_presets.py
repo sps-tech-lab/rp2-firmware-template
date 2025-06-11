@@ -9,8 +9,6 @@
 #                                         SPS :: 2025                                            #
 ##################################################################################################
 """
-generate_presets.py
-
 Generate a full CMakePresets.json from a CMakePresets.json.def template
 by injecting a user-specified CMake generator into every configurePreset.
 
