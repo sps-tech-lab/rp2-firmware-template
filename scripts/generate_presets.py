@@ -6,7 +6,7 @@
 # / /_/ / /___/ /|  / /___/ _, _/ ___ |/ / / /___   / ____/ _, _/ /___ ___/ / /___  / /  ___/ /  #
 # \____/_____/_/ |_/_____/_/ |_/_/  |_/_/ /_____/  /_/   /_/ |_/_____//____/_____/ /_/  /____/   #
 ##################################################################################################
-#                                         SPS :: 2025                                            #
+# v.1.1                                        SPS :: 2025                                       #
 ##################################################################################################
 """
 Generate a full CMakePresets.json from a CMakePresets.json.def template
@@ -67,13 +67,13 @@ def main():
     try:
         template_text = Path(args.def_file).read_text()
     except Exception as e:
-        print(f"[⚠️ Failed to read template '{args.def_file}': {e}", file=sys.stderr)
+        print(f"⚠️ Failed to read template '{args.def_file}': {e}", file=sys.stderr)
         sys.exit(1)
 
     try:
         data = json.loads(template_text)
     except json.JSONDecodeError as e:
-        print(f"[⚠️ Invalid JSON in template: {e}", file=sys.stderr)
+        print(f"⚠️ Invalid JSON in template: {e}", file=sys.stderr)
         sys.exit(1)
 
     # Inject the chosen generator into each configurePreset
@@ -83,9 +83,9 @@ def main():
     # Write out the final CMakePresets.json
     try:
         Path(args.out_file).write_text(json.dumps(data, indent=2))
-        print(f"[✅ Generated '{args.out_file}' using generator: {args.generator}")
+        print(f"✅ Generated '{args.out_file}' using generator: {args.generator}")
     except Exception as e:
-        print(f"[🛑 Failed to write output '{args.out_file}': {e}", file=sys.stderr)
+        print(f"🛑 Failed to write output '{args.out_file}': {e}", file=sys.stderr)
         sys.exit(1)
 
 if __name__ == '__main__':
