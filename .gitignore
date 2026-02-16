@@ -14,3 +14,7 @@ build/
 third_party/picotool
 
 CMakePresets.json
+
+cmake-build-debug/
+
+.idea/

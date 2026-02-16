@@ -13,7 +13,7 @@
         "PICO_BOARD": "waveshare_rp2040_lcd_1.28"
       },
       "environment": {
-        "PICO_SDK_PATH": "../../../pico-sdk"
+        "PICO_SDK_PATH": "${sourceDir}/third_party/pico-sdk"
       }
     },
     {
@@ -23,7 +23,7 @@
         "PICO_BOARD": "waveshare_rp2040_pizero"
       },
       "environment": {
-        "PICO_SDK_PATH": "../../../pico-sdk"
+        "PICO_SDK_PATH": "${sourceDir}/third_party/pico-sdk"
       }
     }
   ],
