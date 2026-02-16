@@ -11,6 +11,6 @@ build/
 .idea/*.iml
 
 # Fetchable third party content
-third_party/
+third_party/picotool
 
 CMakePresets.json
