@@ -3,6 +3,9 @@
 
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/sps-tech-lab/pico-cmake-project?label=version)
 ![License](https://img.shields.io/github/license/sps-tech-lab/pico-cmake-project)
+![CI](https://github.com/sps-tech-lab/rp2-firmware-template/actions/workflows/build.yml/badge.svg?branch=main)
+![clang-tidy](https://github.com/sps-tech-lab/rp2-firmware-template/actions/workflows/clang-tidy.yml/badge.svg?branch=main)
+
 
 ---
 
