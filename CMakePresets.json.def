@@ -30,13 +30,11 @@
   "buildPresets": [
     {
       "name":            "Waveshare_rp2040_lcd_1.28",
-      "configurePreset": "Waveshare_rp2040_lcd_1.28",
-      "hidden":          true
+      "configurePreset": "Waveshare_rp2040_lcd_1.28"
     },
     {
       "name":            "Waveshare_rp2040_pizero",
-      "configurePreset": "Waveshare_rp2040_pizero",
-      "hidden":          true
+      "configurePreset": "Waveshare_rp2040_pizero"
     }
   ]
 }

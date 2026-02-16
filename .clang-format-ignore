@@ -1,0 +1,9 @@
+build/
+cmake-build-*/
+generated/
+pico-sdk/
+picotool/
+external/
+third_party/
+scripts/
+

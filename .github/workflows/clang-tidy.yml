@@ -1,0 +1,105 @@
+name: clang-tidy
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop, improvement/tools]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+  workflow_dispatch:
+    inputs:
+      preset:
+        description: 'CMake preset to build'
+        required: false
+        default: 'Waveshare_rp2040_pizero'
+      tidy_check:
+        description: 'Run clang-tidy'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tidy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: ${{ fromJSON(github.event_name == 'workflow_dispatch' && format('["{0}"]', inputs.preset) || '["Waveshare_rp2040_pizero"]') }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build cmake build-essential \
+            gcc-arm-none-eabi libnewlib-arm-none-eabi \
+            clang-format
+
+      - name: Verify pico-sdk
+        run: |
+          test -f third_party/pico-sdk/pico_sdk_init.cmake
+          echo "pico-sdk OK: $(git -C third_party/pico-sdk rev-parse --short HEAD 2>/dev/null || true)"
+
+      - name: Generate CMakePresets.json
+        run: |
+          python3 scripts/generate_presets.py --generator Ninja
+          cmake --list-presets
+          cmake --list-presets=build
+
+      - name: Configure
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.tidy_check }}
+        run: cmake --preset "${{ matrix.preset }}"
+
+      - name: Build
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.tidy_check }}
+        run: cmake --build --preset "${{ matrix.preset }}"
+
+      - name: Resolve build dir
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.tidy_check }}
+        id: builddir
+        shell: bash
+        env:
+          PRESET: ${{ matrix.preset }}
+        run: |
+          set -euo pipefail
+          CACHE="$(find build -type f -name CMakeCache.txt -path "*${PRESET}*" -print -quit || true)"
+          if [[ -z "${CACHE}" ]]; then
+            CACHE="$(find build -type f -name CMakeCache.txt -print -quit || true)"
+          fi
+          if [[ -z "${CACHE}" ]]; then
+            echo "No CMakeCache.txt found under build/"
+            exit 1
+          fi
+          BUILD_DIR="$(dirname "${CACHE}")"
+          echo "build_dir=${BUILD_DIR}" >> "$GITHUB_OUTPUT"
+          echo "Resolved BUILD_DIR=${BUILD_DIR}"
+
+      - name: clang-tidy
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.tidy_check }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          clang-tidy --version
+          chmod +x ./scripts/clang-tidy.sh
+          ./scripts/clang-tidy.sh "${{ steps.builddir.outputs.build_dir }}"
