@@ -1,0 +1,57 @@
+BasedOnStyle: LLVM
+Language: Cpp
+
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+ColumnLimit: 120
+
+AccessModifierOffset: -4
+
+InsertBraces: true
+
+BreakBeforeBraces: Attach
+AllowShortBlocksOnASingleLine: Never
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Inline
+
+PointerAlignment: Left
+ReferenceAlignment: Left
+DerivePointerAlignment: false
+
+SpaceBeforeParens: Never
+SpacesInParentheses: false
+SpaceInEmptyParentheses: false
+SpacesInConditionalStatement: true
+
+AlignAfterOpenBracket: Align
+AlignOperands: Align
+AlignConsecutiveAssignments: None
+AlignConsecutiveDeclarations: None
+
+AlignConsecutiveMacros: Consecutive
+AlignTrailingComments: true
+
+PackConstructorInitializers: NextLineOnly
+BreakConstructorInitializers: BeforeColon
+
+BinPackArguments: true
+BinPackParameters: true
+
+SortIncludes: true
+IncludeBlocks: Preserve
+
+# Include layout
+IncludeCategories:
+  - Regex: '^(<pico/.*>|<hardware/.*>|<tusb/.*>)$'
+    Priority: 2
+  - Regex: '^<.*>$'
+    Priority: 1
+  - Regex: '^".*"$'
+    Priority: 3
+
+ReflowComments: true
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1

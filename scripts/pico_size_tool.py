@@ -6,7 +6,7 @@
 #  / ____// // /___/ /_/ /   ___/ // /   / /__/ /___     / / / /_/ / /_/ / /___ #
 # /_/   /___/\____/\____/   /____/___/  /____/_____/    /_/  \____/\____/_____/ #
 #################################################################################
-# v.1.1                            SPS :: 2025                                  #
+# v.1.2                            SPS :: 2025                                  #
 #################################################################################
 """
 Generate nice-looking developer-friendly size output table
@@ -21,6 +21,8 @@ Arguments:
   -pl / --platform
         Specify target platform (defaults to 'rp2040')
 
+  -se / --size-exe
+
 Note:
   If no flash size is provided, uses per-platform defaults
 
@@ -33,6 +35,8 @@ import shutil
 import subprocess
 import sys
 import re
+import json
+from pathlib import Path
 
 # -------- Defaults by platform --------
 PLATFORM_DEFAULTS = {
@@ -175,7 +179,8 @@ def main():
     parser.add_argument('-fl', '--flash-size', type=int, help='Total FLASH region size in bytes')
     parser.add_argument('-pl', '--platform', choices=PLATFORM_DEFAULTS.keys(), default='rp2040',
                         help='Target platform name')
-    parser.add_argument('--size-exe', help='Path to a specific size executable to use')
+    parser.add_argument('-se', '--size-exe', help='Path to a specific size executable to use')
+    parser.add_argument('-js', '--json', dest='json_out', help='Write JSON report to this file')
     parser.add_argument('elf', help='Path to the compiled ELF file')
     args = parser.parse_args()
 
@@ -209,6 +214,28 @@ def main():
     flash_used = sum_matching(sections, FLASH_SECTIONS)
     ram_used   = sum_matching(sections, RAM_SECTIONS)
     irq_used   = sum_matching(sections, IRQ_SECTIONS)
+
+    # JSON report
+    if args.json_out:
+        report = {
+            "elf": args.elf,
+            "platform": args.platform,
+            "flash_total": flash_total,
+            "ram_total": ram_total,
+            "irq_total": irq_total,
+            "flash_used": flash_used,
+            "ram_used": ram_used,
+            "irq_used": irq_used,
+            "flash_used_pct": (flash_used / flash_total) if flash_total else None,
+            "ram_used_pct": (ram_used / ram_total) if ram_total else None,
+            "irq_used_pct": (irq_used / irq_total) if irq_total else None,
+            "size_exe": size_exe,
+            "mode": mode,
+        }
+        out_path = Path(args.json_out)
+        if out_path.parent and str(out_path.parent) not in (".", ""):
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 
     # Output
     print("===================== ELF size =====================")

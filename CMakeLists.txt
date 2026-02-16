@@ -7,10 +7,13 @@ include(cmake/bringup_helper.cmake)
 include(pico_sdk_import.cmake)
 
 # Project name
-project(pico-cmake-project)
+project(rp2-firmware-template)
 
 # Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
+
+# Generate compile_commands.json
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Add executables
 add_executable(${PROJECT_NAME}
@@ -25,3 +28,9 @@ pico_add_extra_outputs(${PROJECT_NAME})
 
 # Add ELF size table to build report
 include(cmake/pico_size_tool.cmake)
+
+# Add extension board (if it specified)
+if(DEFINED EXT_BOARD AND NOT EXT_BOARD STREQUAL "")
+    message(STATUS "Using extension board [${EXT_BOARD}] specifics")
+    include(ext_boards/${EXT_BOARD}/ext_board.cmake)
+endif()
