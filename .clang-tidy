@@ -1,0 +1,20 @@
+Checks: >
+  -*,
+  clang-analyzer-*,
+  bugprone-*,
+  performance-*,
+  modernize-*,
+  misc-*,
+
+  -modernize-use-trailing-return-type,
+  -modernize-use-nodiscard,
+  -modernize-macro-to-enum,
+  -modernize-use-using,
+  -bugprone-easily-swappable-parameters,
+  -misc-include-cleaner,
+  -misc-non-private-member-variables-in-classes,
+  -misc-const-correctness
+
+HeaderFilterRegex: '^(app|src|ext_boards)/'
+WarningsAsErrors: ''
+FormatStyle: file

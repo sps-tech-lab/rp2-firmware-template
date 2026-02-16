@@ -5,7 +5,7 @@ else()
     message(STATUS "[BRINGUP HELPER] Detected PICO_SDK_PATH = $ENV{PICO_SDK_PATH}")
 endif()
 get_filename_component(_PICO_SDK_DIR
-        "${CMAKE_BINARY_DIR}/$ENV{PICO_SDK_PATH}"
+        "$ENV{PICO_SDK_PATH}"
         REALPATH
 )
 message(STATUS "[BRINGUP HELPER] Resolved PICO_SDK_PATH → ${_PICO_SDK_DIR}")

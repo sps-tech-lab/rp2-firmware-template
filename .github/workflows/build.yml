@@ -1,0 +1,160 @@
+name: build
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop, improvement/tools]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+  workflow_dispatch:
+    inputs:
+      preset:
+        description: 'CMake preset to build'
+        required: false
+        default: 'Waveshare_rp2040_pizero'
+      format_check:
+        description: 'Run clang-format check'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: ${{ fromJSON(github.event_name == 'workflow_dispatch' && format('["{0}"]', inputs.preset) || '["Waveshare_rp2040_pizero"]') }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ninja-build cmake build-essential \
+            gcc-arm-none-eabi libnewlib-arm-none-eabi \
+            clang-format
+
+      - name: Verify pico-sdk
+        run: |
+          test -f third_party/pico-sdk/pico_sdk_init.cmake
+          echo "pico-sdk OK: $(git -C third_party/pico-sdk rev-parse --short HEAD 2>/dev/null || true)"
+
+      - name: Generate CMakePresets.json
+        run: |
+          python3 scripts/generate_presets.py --generator Ninja
+          cmake --list-presets
+          cmake --list-presets=build
+
+      - name: Configure
+        run: cmake --preset "${{ matrix.preset }}"
+
+      - name: Build
+        run: cmake --build --preset "${{ matrix.preset }}"
+
+      - name: Resolve build dir
+        id: builddir
+        shell: bash
+        env:
+          PRESET: ${{ matrix.preset }}
+        run: |
+          set -euo pipefail
+
+          CACHE="$(find build -type f -name CMakeCache.txt -path "*${PRESET}*" -print -quit || true)"
+          if [[ -z "${CACHE}" ]]; then
+            CACHE="$(find build -type f -name CMakeCache.txt -print -quit || true)"
+          fi
+          if [[ -z "${CACHE}" ]]; then
+            echo "No CMakeCache.txt found under build/"
+            exit 1
+          fi
+
+          BUILD_DIR="$(dirname "${CACHE}")"
+          echo "build_dir=${BUILD_DIR}" >> "$GITHUB_OUTPUT"
+          echo "Resolved BUILD_DIR=${BUILD_DIR}"
+
+      - name: Generate size report
+        shell: bash
+        env:
+          PRESET: ${{ matrix.preset }}
+        run: |
+          set -euo pipefail
+          BUILD_DIR="${{ steps.builddir.outputs.build_dir }}"
+
+          # Find ELF in build dir
+          ELF="$(find "${BUILD_DIR}" -type f -name '*.elf' -print -quit || true)"
+          if [[ -z "${ELF}" ]]; then
+            echo "No .elf found under ${BUILD_DIR}"
+            exit 1
+          fi
+          echo "ELF=${ELF}"
+
+          FLASH_SIZE="$(sed -n 's/^PICO_FLASH_SIZE_BYTES:.*=\(.*\)$/\1/p' "${CACHE}" | tail -n 1 || true)"
+          PLATFORM="$(sed -n 's/^PICO_PLATFORM:.*=\(.*\)$/\1/p' "${CACHE}" | tail -n 1 || true)"
+          
+          # Validate some crucial args
+          args=()
+          [[ -n "${FLASH_SIZE}" ]] && args+=(--flash-size "${FLASH_SIZE}")
+          [[ -n "${PLATFORM}"   ]] && args+=(--platform "${PLATFORM}")
+          args+=(--json "size_${PRESET}.json" "${ELF}")
+
+          python3 scripts/pico_size_tool.py "${args[@]}" | tee "size_${PRESET}.txt"
+
+      - name: Upload size report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: size-${{ matrix.preset }}
+          retention-days: 14
+          path: |
+            size_${{ matrix.preset }}.txt
+            size_${{ matrix.preset }}.json
+
+      - name: clang-format check
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.format_check }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f .clang-format ]]; then
+            echo "No .clang-format found -> skipping format check."
+            exit 0
+          fi
+          clang-format --version
+          chmod +x ./scripts/check-format.sh
+          ./scripts/check-format.sh
+
+      - name: Upload firmware artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.preset }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            build/**/**/*.uf2
+            build/**/**/*.elf
+            build/**/**/*.bin
+            build/**/**/*.hex
+            build/**/**/*.map
+            build/**/compile_commands.json
