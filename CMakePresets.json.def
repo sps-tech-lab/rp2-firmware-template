@@ -25,6 +25,16 @@
       "environment": {
         "PICO_SDK_PATH": "${sourceDir}/third_party/pico-sdk"
       }
+    },
+    {
+      "name": "unit-tests",
+      "binaryDir": "${sourceDir}/build/unit-tests",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "RP2_ENABLE_TESTS": "ON",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "FETCHCONTENT_BASE_DIR": "${sourceDir}/third_party/catch2"
+      }
     }
   ],
   "buildPresets": [
@@ -35,6 +45,10 @@
     {
       "name":            "Waveshare_rp2040_pizero",
       "configurePreset": "Waveshare_rp2040_pizero"
+    },
+    {
+      "name": "unit-tests",
+      "configurePreset": "unit-tests"
     }
   ]
 }
