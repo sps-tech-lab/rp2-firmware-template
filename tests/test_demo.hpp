@@ -4,5 +4,4 @@
 #ifndef TEST_DEMO_HPP
 #define TEST_DEMO_HPP
 
-
-#endif //TEST_DEMO_HPP
+#endif // TEST_DEMO_HPP

@@ -2,7 +2,7 @@
 // Created by SPS on 20/02/2026.
 //
 
-//Includes
+// Includes
 #include "test_demo.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include "demo.hpp"

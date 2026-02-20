@@ -4,11 +4,11 @@
 #ifndef DEMO_HPP
 #define DEMO_HPP
 
-//Includes
+// Includes
 #include <cstdint>
 
 namespace demo {
-    uint32_t add(uint32_t a, uint32_t b);
+uint32_t add(uint32_t a, uint32_t b);
 }
 
-#endif //DEMO_HPP
+#endif // DEMO_HPP
