@@ -1,0 +1,47 @@
+name: unit-tests
+
+on:
+  push:
+    branches: [ main, develop, improvement/unit-tests ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build cmake git
+          
+      - name: Generate CMakePresets.json
+        run: |
+          python3 scripts/generate_presets.py --generator Ninja
+          cmake --list-presets
+          cmake --list-presets=build
+
+      - name: Configure unit-tests
+        run: cmake --preset unit-tests
+
+      - name: Build unit-tests
+        run: cmake --build --preset unit-tests
+
+      - name: Run unit-tests (ctest)
+        run: ctest --test-dir build/unit-tests --output-on-failure

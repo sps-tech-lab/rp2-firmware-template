@@ -12,6 +12,7 @@ build/
 
 # Fetchable third party content
 third_party/picotool
+third_party/catch2
 
 CMakePresets.json
 

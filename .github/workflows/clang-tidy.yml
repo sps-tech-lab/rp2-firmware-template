@@ -102,4 +102,4 @@ jobs:
           set -euo pipefail
           clang-tidy --version
           chmod +x ./scripts/clang-tidy.sh
-          ./scripts/clang-tidy.sh "${{ steps.builddir.outputs.build_dir }}"
+          ./scripts/clang-tidy.sh --firmware -p "${{ steps.builddir.outputs.build_dir }}"

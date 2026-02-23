@@ -1,5 +1,17 @@
 cmake_minimum_required(VERSION 3.19)
 
+# Tests
+if(RP2_ENABLE_TESTS)
+  project(rp2-firmware-template LANGUAGES C CXX)
+
+  # Shared libraries
+  add_subdirectory(src/demo)
+
+  enable_testing()
+  add_subdirectory(tests)
+  return()
+endif()
+
 # Check [pico-sdk] and [picotool]
 include(cmake/bringup_helper.cmake)
 
@@ -7,7 +19,10 @@ include(cmake/bringup_helper.cmake)
 include(pico_sdk_import.cmake)
 
 # Project name
-project(rp2-firmware-template)
+project(rp2-firmware-template LANGUAGES C CXX ASM)
+
+# Shared libraries
+add_subdirectory(src/demo)
 
 # Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
@@ -18,10 +33,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Add executables
 add_executable(${PROJECT_NAME}
         app/main.c
+        src/demo/demo.cpp
+        src/demo/demo.hpp
 )
 
 # Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(${PROJECT_NAME} pico_stdlib)
+target_link_libraries(${PROJECT_NAME} pico_stdlib demo)
 
 # Create map/bin/hex/uf2 file in addition to ELF.
 pico_add_extra_outputs(${PROJECT_NAME})
