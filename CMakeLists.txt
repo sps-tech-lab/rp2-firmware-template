@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 
 # Project name
-project(rp2-firmware-template)
+project(rp2-firmware-template LANGUAGES C CXX)
 
 # Shared libraries
 add_subdirectory(src/demo)
@@ -12,6 +12,8 @@ if(RP2_ENABLE_TESTS)
   add_subdirectory(tests)
   return()
 endif()
+
+enable_language(ASM)
 
 # Check [pico-sdk] and [picotool]
 include(cmake/bringup_helper.cmake)
