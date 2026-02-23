@@ -1,10 +1,11 @@
 
-# PICO CMAKE PROJECT
+# RP2 FIRMWARE TEMPLATE
 
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/sps-tech-lab/pico-cmake-project?label=version)
 ![License](https://img.shields.io/github/license/sps-tech-lab/pico-cmake-project)
 ![CI](https://github.com/sps-tech-lab/rp2-firmware-template/actions/workflows/build.yml/badge.svg?branch=main)
 ![clang-tidy](https://github.com/sps-tech-lab/rp2-firmware-template/actions/workflows/clang-tidy.yml/badge.svg?branch=main)
+![unit-tests](https://github.com/sps-tech-lab/rp2-firmware-template/actions/workflows/unit-tests.yml/badge.svg)
 
 
 ---
@@ -102,3 +103,64 @@ the correct pico_arm_cortex_m0plus_gcc.cmake toolchain file, and your macOS buil
    arm-none-eabi-gcc --version
    ```
    You should see the version banner instead of “command not found.”
+
+---
+
+## Code style
+
+Rules for auto-formatting are described in the ```.clang-format``` file.
+All third_party libraries should be excluded from auto-formatting in the ```.clang-format-ignore``` file.
+
+> [!TIP]
+> This repository enforces formatting in CI. Pull requests will fail if code is not formatted.
+
+Format:
+```bash
+./scripts/clang-format.sh
+```
+
+Check:
+```bash
+./scripts/check-format.sh
+```
+Make it executable(in case):
+```bash
+chmod +x ./scripts/clang-format.sh
+chmod +x ./scripts/check-format.sh
+```
+
+In case "Permission denied" use ```dos2unix``` tool
+
+```bash
+dos2unix ./scripts/clang-format.sh
+dos2unix ./scripts/check-format.sh
+```
+
+## Clang Tidy
+
+All clang tidy rules are listed in ```.clang-tidy``` file. 
+Clang tidy can be used separately for firmware and uni-tests code with dedicated script.
+
+```
+Usage:
+  clang-tidy.sh -firmware [-p <build_dir>]
+  clang-tidy.sh -unit-tests [-p <build_dir>]
+
+Modes:
+  --firmware     Firmware: adds --target=arm-none-eabi and ARM sysincludes, skips tests/*
+  --unit-tests   Unit tests: uses host compile_commands, includes tests/*
+
+Options:
+  -p <dir>  Build directory containing compile_commands.json
+```
+
+---
+
+## Unit-tests
+
+To run unit-test on follow next steps:
+```bash
+cmake --preset unit-tests
+cmake --build --preset unit-tests
+ctest --test-dir build/unit-tests --output-on-failure
+```

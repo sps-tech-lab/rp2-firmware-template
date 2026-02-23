@@ -15,6 +15,6 @@ Checks: >
   -misc-non-private-member-variables-in-classes,
   -misc-const-correctness
 
-HeaderFilterRegex: '^(app|src|ext_boards)/'
+HeaderFilterRegex: '^(app|src|tests|ext_boards)/'
 WarningsAsErrors: ''
 FormatStyle: file
