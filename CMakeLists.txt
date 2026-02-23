@@ -1,25 +1,28 @@
 cmake_minimum_required(VERSION 3.19)
 
-# Project name
-project(rp2-firmware-template LANGUAGES C CXX)
-
-# Shared libraries
-add_subdirectory(src/demo)
-
 # Tests
 if(RP2_ENABLE_TESTS)
+  project(rp2-firmware-template LANGUAGES C CXX)
+
+  # Shared libraries
+  add_subdirectory(src/demo)
+
   enable_testing()
   add_subdirectory(tests)
   return()
 endif()
-
-enable_language(ASM)
 
 # Check [pico-sdk] and [picotool]
 include(cmake/bringup_helper.cmake)
 
 # Include the SDK import
 include(pico_sdk_import.cmake)
+
+# Project name
+project(rp2-firmware-template LANGUAGES C CXX ASM)
+
+# Shared libraries
+add_subdirectory(src/demo)
 
 # Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
