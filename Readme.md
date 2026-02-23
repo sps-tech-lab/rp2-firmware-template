@@ -1,5 +1,5 @@
 
-# PICO CMAKE PROJECT
+# RP2 FIRMWARE TEMPLATE
 
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/sps-tech-lab/pico-cmake-project?label=version)
 ![License](https://img.shields.io/github/license/sps-tech-lab/pico-cmake-project)
@@ -134,6 +134,24 @@ In case "Permission denied" use ```dos2unix``` tool
 ```bash
 dos2unix ./scripts/clang-format.sh
 dos2unix ./scripts/check-format.sh
+```
+
+## Clang Tidy
+
+All clang tidy rules are listed in ```.clang-tidy``` file. 
+Clang tidy can be used separately for firmware and uni-tests code with dedicated script.
+
+```
+Usage:
+  clang-tidy.sh -firmware [-p <build_dir>]
+  clang-tidy.sh -unit-tests [-p <build_dir>]
+
+Modes:
+  --firmware     Firmware: adds --target=arm-none-eabi and ARM sysincludes, skips tests/*
+  --unit-tests   Unit tests: uses host compile_commands, includes tests/*
+
+Options:
+  -p <dir>  Build directory containing compile_commands.json
 ```
 
 ---
