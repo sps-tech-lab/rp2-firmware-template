@@ -4,6 +4,10 @@ cmake_minimum_required(VERSION 3.19)
 if(RP2_ENABLE_TESTS)
   project(rp2-firmware-template LANGUAGES C CXX)
 
+  # Enable clang-tools like targets
+  include(cmake/clang_tools.cmake)
+  rp2_enable_clang_tools()
+
   # Shared libraries
   add_subdirectory(src/demo)
 
@@ -20,6 +24,10 @@ include(pico_sdk_import.cmake)
 
 # Project name
 project(rp2-firmware-template LANGUAGES C CXX ASM)
+
+# Enable clang-tools like targets
+include(cmake/clang_tools.cmake)
+rp2_enable_clang_tools()
 
 # Shared libraries
 add_subdirectory(src/demo)
