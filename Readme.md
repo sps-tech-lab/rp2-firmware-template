@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/github/license/sps-tech-lab/pico-cmake-project)
 ![CI](https://github.com/sps-tech-lab/rp2-firmware-template/actions/workflows/build.yml/badge.svg?branch=main)
 ![clang-tidy](https://github.com/sps-tech-lab/rp2-firmware-template/actions/workflows/clang-tidy.yml/badge.svg?branch=main)
-![unit-tests](https://github.com/sps-tech-lab/rp2-firmware-template/actions/workflows/unit-tests.yml/badge.svg)
+![unit-tests](https://github.com/sps-tech-lab/rp2-firmware-template/actions/workflows/unit-tests.yml/badge.svg?branch=main)
 
 
 ---
@@ -125,15 +125,13 @@ Check:
 ```
 Make it executable(in case):
 ```bash
-chmod +x ./scripts/clang-format.sh
-chmod +x ./scripts/check-format.sh
+chmod +x scripts/*.sh
 ```
 
 In case "Permission denied" use ```dos2unix``` tool
 
 ```bash
-dos2unix ./scripts/clang-format.sh
-dos2unix ./scripts/check-format.sh
+dos2unix scripts/*.sh
 ```
 
 ## Clang Tidy
@@ -154,6 +152,24 @@ Options:
   -p <dir>  Build directory containing compile_commands.json
 ```
 
+---
+
+## Additional targets
+
+This repository also exposes formatting and static analysis as cmake targets.
+
+Available targets:
+* ```format``` — apply clang-format to the codebase
+* ```format-check``` — verify formatting (fails if reformatting is needed)
+* ```tidy``` — run clang-tidy for the active preset/build
+* ```tidy-firmware``` — run clang-tidy particularly for firmware
+* ```tidy-tests``` — run clang-tidy particularly for unit-tests
+* ```quality``` — runs format-check + tidy
+
+Example:
+```bash
+cmake --build --preset Waveshare_rp2040_pizero --target <target>
+```
 ---
 
 ## Unit-tests
