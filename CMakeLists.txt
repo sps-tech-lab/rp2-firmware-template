@@ -1,19 +1,10 @@
 cmake_minimum_required(VERSION 3.19)
 
 # Tests
+include(cmake/unit-test_config.cmake)
 if(RP2_ENABLE_TESTS)
-  project(rp2-firmware-template LANGUAGES C CXX)
-
-  # Enable clang-tools like targets
-  include(cmake/clang_tools.cmake)
-  rp2_enable_clang_tools()
-
-  # Shared libraries
-  add_subdirectory(src/demo)
-
-  enable_testing()
-  add_subdirectory(tests)
-  return()
+    config_unit_tests()
+    return()
 endif()
 
 # Check [pico-sdk] and [picotool]
