@@ -1,4 +1,4 @@
-function(config_unit_tests)
+macro(config_unit_tests)
 
     message(STATUS "Configure unit-tests")
 
@@ -14,7 +14,7 @@ function(config_unit_tests)
     enable_testing()
     add_subdirectory(tests)
 
-endfunction()
+endmacro()
 
 
 
